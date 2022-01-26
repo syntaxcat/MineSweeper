@@ -7,7 +7,7 @@ const MOVE = '😲';
 const MINE = '💣';
 const FLAG = '🚩';
 
-var gBoard = buildBoard();
+var gBoard;
 var gTimer;
 
 //This is an object in which you can keep and update the current game state:
@@ -27,12 +27,16 @@ var gGame = {
 
 var gLevel = {
 	SIZE: 4,
-	MINES: 2,
-	EMPTY: 14
+	MINES: 2
 };
 
 // 1 - This is called when page loads - on the body tag!!!
-function initGame() {}
+function initGame() {
+	gBoard = buildBoard();
+	setMinesNegsCount();
+	addMinesRandom(gLevel.MINES);
+	renderBoard();
+}
 // TODO:
 //Reset board
 //Reset life
@@ -46,9 +50,9 @@ function initGame() {}
 
 function buildBoard() {
 	var board = [];
-	for (var i = 0; i < 4; i++) {
+	for (var i = 0; i < gLevel.SIZE; i++) {
 		board[i] = [];
-		for (var j = 0; j < 4; j++) {
+		for (var j = 0; j < gLevel.SIZE; j++) {
 			var cell = {
 				minesAroundCount: 4,
 				isShown: false,
@@ -68,14 +72,14 @@ function buildBoard() {
 function setMinesNegsCount() {
 	for (var i = 0; i < gBoard.length; i++) {
 		for (var j = 0; j < gBoard[i].length; j++) {
-			gBoard[i][j].minesAroundCount = countNeighbors(i, j, gBoard);
+			gBoard[i][j].minesAroundCount = countNeighbors(i, j);
 		}
 	}
+	console.log(gBoard);
 }
 
 //Render the board as a <table> to the page
 //DOM - HTML
-renderBoard();
 
 function renderBoard() {
 	setMinesNegsCount();
@@ -92,9 +96,9 @@ function renderBoard() {
 				className = 'cell';
 				cell = '';
 			}
-			var cellTitle = 'cell ' + i + ',' + j;
+			var cellID = 'cell ' + i + ',' + j;
 			strHTML += `\t<td class="cell ${className}"
-			onclick="cellClicked(this, ${i}, ${j})" title="${cellTitle}">
+			onclick="cellClicked(this, ${i}, ${j})" id="${cellID}">
 				${cell}
 				</td>\n`;
 		}
@@ -108,39 +112,50 @@ function renderBoard() {
 //Called when a cell (td) is clicked
 function cellClicked(elCell, i, j) {
 	var cell = gBoard[i][j];
-	elCell.innerHTML = cell.minesAroundCount;
-	if (cell !== MINE) {
-		cell.isShown = true;
+	if (cell.isMine) {
+		elCell.innerHTML = MINE;
 	} else {
-		cell.isShown = false;
+		elCell.innerHTML = cell.minesAroundCount;
 	}
 	console.log('Cell clicked: ', elCell, i, j);
 }
 
-// function addMines() {
-// var emptyCell = emptyCells();
-// console.log(emptyCell);
-// var IndexRandomEmptyCell = getRandomInt(0, emptyCell.length - 1);
-// var currCell = emptyCell[IndexRandomEmptyCell];
-// console.log(currCell.i);
-// console.log(currCell.j);
-// gBoard[currCell.i][currCell.j].gameElement = 'BALL';
-// renderCell(currCell, BALL_IMG);
-// gCountBalls++;
-// }
+function boardSize(size, mines) {
+	// var elHearts = document.querySelector('header p');
+	// difficulty ? (elHearts.innerText = '❤️❤️❤️') : (elHearts.innerText = '❤️');
+	gLevel.SIZE = size;
+	gLevel.MINES = mines;
+	initGame();
+}
 
-// function emptyCells() {
-// var emptyArr = [];
-// for (var i = 0; i < gBoard.length; i++) {
-// for (var j = 0; j < gBoard[0].length; j++) {
-// var currCell = gBoard[i][j];
-// if (currCell.gameElement === null && currCell.type === 'FLOOR') {
-// emptyArr.push({ i, j });
-// }
-// }
-// }
-// return emptyArr;
-// }
+function addMinesRandom(minesAmount) {
+	console.log(emptyCells());
+	var arrEmptyCells = emptyCells();
+	for (var i = 0; i < minesAmount; i++) {
+		var Idx = getRandomIntInclusive(0, arrEmptyCells.length - 1);
+		var location = arrEmptyCells[Idx];
+		//update model -
+		gBoard[location.i][location.j].isMine = true;
+		// 	//update DOM -
+		// var elCell = document.getElementById('cell ' + location.i + ',' + location.j);
+		// console.log('ELCELL', elCell);
+		arrEmptyCells.splice(Idx, 1);
+	}
+	console.log('GBOARD', gBoard);
+}
+
+function emptyCells() {
+	var emptyArr = [];
+	for (var i = 0; i < gBoard.length; i++) {
+		for (var j = 0; j < gBoard[0].length; j++) {
+			var currCell = gBoard[i][j];
+			if (!currCell.isMine) {
+				emptyArr.push({ i, j });
+			}
+		}
+	}
+	return emptyArr;
+}
 
 //Called on right click to mark a cell (suspected to be a mine) Search the web (and implement) how to hide the context menu on right click
 function cellMarked(elCell) {}
