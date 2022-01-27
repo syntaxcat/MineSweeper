@@ -18,19 +18,15 @@ var gTimer;
 
 var gGame = {
 	isOn: false,
-	// isOver: false,
 	firstTurn: true,
-	shownCount: 0, //// needed for: checking win
-	markedCount: 0, //// needed for: timer
+	shownCount: 0, // needed for: checking win
+	markedCount: 0, // needed for: timer
 	secsPassed: 0
 };
-
-// This is an object by which the board size is set -
 
 var gLevel = {
 	SIZE: 4,
 	MINES: 2
-	// EMPTY: 14
 };
 
 // 1 - This is called when page loads - on the body tag!!!
@@ -38,7 +34,6 @@ function initGame() {
 	gGame.shownCount = 0;
 	gGame.isOn = true;
 	gGame.firstTurn = true;
-
 	gBoard = buildBoard();
 	renderBoard();
 }
@@ -54,7 +49,8 @@ function initGame() {
 function boardSize(size, mines) {
 	gLevel.SIZE = size;
 	gLevel.MINES = mines;
-	// gLevel.EMPTY = gLevel.SIZE * gLevel.SIZE - gLevel.MINES;
+	document.querySelector('h2 span').innerText = mines;
+	stopTime();
 	initGame();
 }
 
@@ -66,10 +62,10 @@ function buildBoard() {
 		board[i] = [];
 		for (var j = 0; j < gLevel.SIZE; j++) {
 			var cell = {
-				minesAroundCount: 4,
+				minesAroundCount: 0,
 				isShown: false, //// needed for: first move isn't a bomb rule..
 				isMine: false,
-				isMarked: true
+				isMarked: false
 			};
 			board[i][j] = cell;
 		}
@@ -120,9 +116,12 @@ function renderBoard() {
 //Called when a cell (td) is clicked
 function cellClicked(elCell, i, j) {
 	var cell = gBoard[i][j];
+	if (cell.isShown) return;
 	// make sure first turn isn't a bomb - TODO--------
 	if (gGame.firstTurn) {
+		startStopWatch();
 		cell.isMine = false;
+		cell.isShown = true;
 		// cell.innerHTML !== MINE;
 		elCell.innerHTML = cell.minesAroundCount;
 
@@ -138,13 +137,15 @@ function cellClicked(elCell, i, j) {
 		// cell.isMarked = true;
 	} else {
 		elCell.innerHTML = cell.minesAroundCount;
-		gGame.shownCount++;
-		checkGameOver();
+		if (!cell.minesAroundCount) {
+			expandShown(gBoard, i, j);
+		} else {
+			gGame.shownCount++;
+		}
 	}
-
+	cell.isShown = true;
+	checkGameOver(i, j);
 	console.log('Cell clicked: ', elCell, i, j);
-	console.log('gGameShownCount', gGame.shownCount);
-	// console.log('gGameMarkedCount', gGame.markedCount);
 }
 
 function addMinesRandom(minesAmount, firstLocation) {
@@ -169,7 +170,7 @@ function emptyCells() {
 	for (var i = 0; i < gBoard.length; i++) {
 		for (var j = 0; j < gBoard[0].length; j++) {
 			var currCell = gBoard[i][j];
-			if (!currCell.isMine) {
+			if (!currCell.isMine && !currCell.isShown) {
 				emptyArr.push({ i, j });
 			}
 		}
@@ -178,20 +179,32 @@ function emptyCells() {
 }
 
 //Called on right click to mark a cell (suspected to be a mine) Search the web (and implement) how to hide the context menu on right click
-function cellMarked(elCell) {
+function cellMarked(elCell, i, j) {
+	var cell = gBoard[i][j];
+	if (cell.isMarked) {
+		elCell.innerHTML = '';
+		cell.isMarked = false;
+		gGame.markedCount--;
+		return;
+	}
+	cell.isMarked = true;
 	elCell.innerHTML = FLAG;
 	gGame.markedCount++;
 	console.log(gGame.markedCount++);
 }
 
-//Game ends when all mines are marked, and all the other cells are shown
-//LOSE: when clicking a mine, all mines should be revealed
-// WIN: all the mines are flagged, and all the other cells are shown
-
-function checkGameOver() {
+function checkGameOver(i, j) {
+	// WIN: all the mines are flagged, and all the other cells are shown
 	if (gGame.shownCount === gLevel.SIZE ** 2 - gLevel.MINES) {
 		gGame.isOn = false;
-		console.log('GAME OVER');
+		console.log('YOU WON!');
+		stopTime();
+	}
+	//LOSE: when clicking a mine, all mines should be revealed
+	if (gBoard[i][j].isMine) {
+		gGame.isOn = false;
+		console.log('GAME OVER!YOU LOST');
+		stopTime();
 	}
 }
 
@@ -200,4 +213,17 @@ not only that cell, but also its neighbors.///////
 NOTE: start with a basic implementation that only opens the non-mine 1st degree neighbors
 BONUS: if you have the time later, try to work more like the real algorithm (see description at the Bonuses section below)
 */
-function expandShown(board, elCell, i, j) {}
+function expandShown(board, rowIdx, colIdx) {
+	for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
+		if (i < 0 || i >= gBoard.length) continue;
+		for (var j = colIdx - 1; j <= colIdx + 1; j++) {
+			if (j < 0 || j >= gBoard[i].length) continue;
+			if (i === rowIdx && j === colIdx) continue;
+			//update Model -
+			board[i][j].isShown = true;
+			gGame.shownCount++;
+			//update DOM -
+			document.getElementById('cell ' + i + ',' + j).innerHTML = board[i][j].minesAroundCount;
+		}
+	}
+}

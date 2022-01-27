@@ -1,22 +1,17 @@
 'use strict';
 
-// var gMiliseconds = 0;
 var gSeconds = 0;
-var gIntervalId;
 
 function startStopWatch() {
-	gIntervalId = setInterval(() => {
-		// gMiliseconds += 17;
+	console.log('start');
+	gTimer = setInterval(() => {
 		gSeconds += 1;
-		var date = new Date(gSeconds);
-		document.getElementById('seconds').innerHTML = `${date.getSeconds()}`;
-		// document.getElementById('milliseconds').innerHTML = `${date.getMilliseconds()}`;
-	}, 1);
+		document.getElementById('seconds').innerHTML = gSeconds;
+	}, 1000);
 }
 
 function stopTime() {
-	clearInterval(gIntervalId);
-	// gMiliseconds = 0;
+	clearInterval(gTimer);
 	gSeconds = 0;
 }
 

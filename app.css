@@ -1,16 +1,19 @@
+* {
+	box-sizing: border-box;
+}
 table {
 	margin: 0 auto;
 	margin-top: 20px;
 	border: 1px solid black;
-	width: 20rem;
-	height: 20rem;
+	width: 30rem;
+	height: 30rem;
+	transform: scale(0.6);
+	margin-top: -5rem;
 }
 
-/* td {
-	border: 1px solid red;
-} */
-
 .board td {
+	padding: 1px;
+	font-size: 20px;
 	width: 30px;
 	height: 30px;
 	text-align: center;
@@ -19,7 +22,7 @@ table {
 }
 
 .board td:hover {
-	background-color: #74c69d;
+	background-color: pink;
 }
 
 .occupied {
