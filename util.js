@@ -35,21 +35,6 @@ function countNeighbors(rowIdx, colIdx) {
 	return neighborsCount;
 }
 
-///////////////////////////////////////////
-
-// function countNeighbors(rowIdx, colIdx, mat, neighbor) {
-// 	var neighborsCount = 0;
-// 	for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
-// 		if (i < 0 || i >= mat.length) continue;
-// 		for (var j = colIdx - 1; j <= colIdx + 1; j++) {
-// 			if (j < 0 || j >= mat[i].length) continue;
-// 			if (i === rowIdx && j === colIdx) continue;
-// 			if (mat[i][j] === neighbor) neighborsCount++;
-// 		}
-// 	}
-// 	return neighborsCount;
-// }
-
 function getRandomIntInclusive(min, max) {
 	min = Math.ceil(min);
 	max = Math.floor(max);

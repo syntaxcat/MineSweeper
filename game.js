@@ -18,27 +18,31 @@ var gTimer;
 
 var gGame = {
 	isOn: false,
-	shownCount: 0,
-	markedCount: 0,
+	// isOver: false,
+	firstTurn: true,
+	shownCount: 0, //// needed for: checking win
+	markedCount: 0, //// needed for: timer
 	secsPassed: 0
 };
 
-// This is an object by which the board size is set (in this case: 4x4 board and how many mines to put)-
+// This is an object by which the board size is set -
 
 var gLevel = {
 	SIZE: 4,
 	MINES: 2
+	// EMPTY: 14
 };
 
 // 1 - This is called when page loads - on the body tag!!!
 function initGame() {
+	gGame.shownCount = 0;
+	gGame.isOn = true;
+	gGame.firstTurn = true;
+
 	gBoard = buildBoard();
-	setMinesNegsCount();
-	addMinesRandom(gLevel.MINES);
 	renderBoard();
 }
 // TODO:
-//Reset board
 //Reset life
 
 // 2 - Builds the boardSet mines at random locations Call setMinesNegsCount() Return the created board
@@ -46,6 +50,14 @@ function initGame() {
 // Beginner (4*4 with 2 MINES)
 // Medium (8 * 8 with 12 MINES)
 // Expert (12 * 12 with 30 MINES)
+
+function boardSize(size, mines) {
+	gLevel.SIZE = size;
+	gLevel.MINES = mines;
+	// gLevel.EMPTY = gLevel.SIZE * gLevel.SIZE - gLevel.MINES;
+	initGame();
+}
+
 // MODEL -  A Matrix containing cell objects: Each cell:
 
 function buildBoard() {
@@ -55,16 +67,13 @@ function buildBoard() {
 		for (var j = 0; j < gLevel.SIZE; j++) {
 			var cell = {
 				minesAroundCount: 4,
-				isShown: false,
+				isShown: false, //// needed for: first move isn't a bomb rule..
 				isMine: false,
 				isMarked: true
 			};
 			board[i][j] = cell;
 		}
 	}
-	// board[0][2].isMine = true;
-	// board[2][3].isMine = true;
-	// console.table(board);
 	return board;
 }
 
@@ -82,7 +91,6 @@ function setMinesNegsCount() {
 //DOM - HTML
 
 function renderBoard() {
-	setMinesNegsCount();
 	var strHTML = '';
 	for (var i = 0; i < gBoard.length; i++) {
 		strHTML += `<tr class="board" >\n`;
@@ -97,7 +105,7 @@ function renderBoard() {
 				cell = '';
 			}
 			var cellID = 'cell ' + i + ',' + j;
-			strHTML += `\t<td class="cell ${className}"
+			strHTML += `\t<td class="cell ${className}" oncontextmenu = "cellMarked(this, ${i}, ${j}); return false"
 			onclick="cellClicked(this, ${i}, ${j})" id="${cellID}">
 				${cell}
 				</td>\n`;
@@ -112,28 +120,40 @@ function renderBoard() {
 //Called when a cell (td) is clicked
 function cellClicked(elCell, i, j) {
 	var cell = gBoard[i][j];
+	// make sure first turn isn't a bomb - TODO--------
+	if (gGame.firstTurn) {
+		cell.isMine = false;
+		// cell.innerHTML !== MINE;
+		elCell.innerHTML = cell.minesAroundCount;
+
+		addMinesRandom(gLevel.MINES, { i: i, j: j });
+		setMinesNegsCount();
+
+		gGame.firstTurn = false;
+	}
+
 	if (cell.isMine) {
 		elCell.innerHTML = MINE;
+		// gGame.markedCount++;
+		// cell.isMarked = true;
 	} else {
 		elCell.innerHTML = cell.minesAroundCount;
+		gGame.shownCount++;
+		checkGameOver();
 	}
+
 	console.log('Cell clicked: ', elCell, i, j);
+	console.log('gGameShownCount', gGame.shownCount);
+	// console.log('gGameMarkedCount', gGame.markedCount);
 }
 
-function boardSize(size, mines) {
-	// var elHearts = document.querySelector('header p');
-	// difficulty ? (elHearts.innerText = '❤️❤️❤️') : (elHearts.innerText = '❤️');
-	gLevel.SIZE = size;
-	gLevel.MINES = mines;
-	initGame();
-}
-
-function addMinesRandom(minesAmount) {
+function addMinesRandom(minesAmount, firstLocation) {
 	console.log(emptyCells());
 	var arrEmptyCells = emptyCells();
 	for (var i = 0; i < minesAmount; i++) {
 		var Idx = getRandomIntInclusive(0, arrEmptyCells.length - 1);
 		var location = arrEmptyCells[Idx];
+		if (location === firstLocation) continue;
 		//update model -
 		gBoard[location.i][location.j].isMine = true;
 		// 	//update DOM -
@@ -158,13 +178,22 @@ function emptyCells() {
 }
 
 //Called on right click to mark a cell (suspected to be a mine) Search the web (and implement) how to hide the context menu on right click
-function cellMarked(elCell) {}
+function cellMarked(elCell) {
+	elCell.innerHTML = FLAG;
+	gGame.markedCount++;
+	console.log(gGame.markedCount++);
+}
 
 //Game ends when all mines are marked, and all the other cells are shown
-//Game ends when:
-//LOSE: when clicking a mine, all mines should be revealed o WIN: all the mines are flagged, and all the other cells are shown
+//LOSE: when clicking a mine, all mines should be revealed
+// WIN: all the mines are flagged, and all the other cells are shown
 
-function checkGameOver() {}
+function checkGameOver() {
+	if (gGame.shownCount === gLevel.SIZE ** 2 - gLevel.MINES) {
+		gGame.isOn = false;
+		console.log('GAME OVER');
+	}
+}
 
 /*When user clicks a cell with no mines around, we need to open
 not only that cell, but also its neighbors.///////

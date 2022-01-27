@@ -1,3 +1,15 @@
+table {
+	margin: 0 auto;
+	margin-top: 20px;
+	border: 1px solid black;
+	width: 20rem;
+	height: 20rem;
+}
+
+/* td {
+	border: 1px solid red;
+} */
+
 .board td {
 	width: 30px;
 	height: 30px;
@@ -30,11 +42,6 @@
 
 .buttons {
 	margin-top: 5px;
-}
-
-table {
-	margin: 0 auto;
-	margin-top: 20px;
 }
 
 body {
