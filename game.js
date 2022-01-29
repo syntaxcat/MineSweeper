@@ -107,6 +107,7 @@ function renderBoard() {
 	// console.log(strHTML)
 	var elBoard = document.querySelector('.cells');
 	elBoard.innerHTML = strHTML;
+	elBoard.className = `cells cells-${gBoard.length}-${gBoard.length}`;
 }
 
 //Called when a cell (td) is clicked
