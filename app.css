@@ -1,5 +1,13 @@
 * {
 	box-sizing: border-box;
+	font-family: monospace;
+}
+
+.flex-container {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	font-size: 1.5rem;
 }
 table {
 	margin: 0 auto;
@@ -19,15 +27,16 @@ table {
 	text-align: center;
 	transition: 0.5s;
 	border: 1px solid black;
+	background-color: #f28482;
 }
 
 .board td:hover {
-	background-color: pink;
+	background-color: #f5cac3;
 }
 
-.occupied {
+/* .occupied {
 	background-color: #ffccd5;
-}
+} */
 
 #display {
 	width: 100%;
@@ -48,9 +57,22 @@ table {
 }
 
 body {
-	background-color: #fff0f3;
+	background-color: #a8dadc;
 }
 
 h1 {
 	margin: 0;
+	text-align: center;
+}
+
+#btn {
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+	font-size: 1.5rem;
+}
+
+h2 {
+	margin: 0;
+	font-size: 1.5rem;
 }

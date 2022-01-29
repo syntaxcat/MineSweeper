@@ -6,7 +6,7 @@ function startStopWatch() {
 	console.log('start');
 	gTimer = setInterval(() => {
 		gSeconds += 1;
-		document.getElementById('seconds').innerHTML = gSeconds;
+		document.getElementById('seconds').innerHTML = gSeconds.toString().padStart(3, 0);
 	}, 1000);
 }
 
