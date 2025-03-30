@@ -114,9 +114,39 @@ function renderBoard() {
 		}
 		strHTML += `</tr>\n`;
 	}
+
 	var elBoard = document.querySelector('.cells');
 	elBoard.innerHTML = strHTML;
 	elBoard.className = `cells cells-${gBoard.length}-${gBoard.length}`;
+
+	// Add touch events AFTER rendering
+	for (let i = 0; i < gBoard.length; i++) {
+		for (let j = 0; j < gBoard[i].length; j++) {
+			const elCell = document.getElementById(`cell-${i}-${j}`);
+			addTouchEvents(elCell, i, j);
+		}
+	}
+}
+
+
+let pressTimer;
+let isLongPress = false;
+
+function addTouchEvents(elCell, i, j) {
+	elCell.addEventListener('touchstart', (e) => {
+		isLongPress = false;
+		pressTimer = setTimeout(() => {
+			isLongPress = true;
+			cellMarked(elCell, i, j); // Place flag
+		}, 500); // time to register long press
+	});
+
+	elCell.addEventListener('touchend', (e) => {
+		clearTimeout(pressTimer);
+		if (!isLongPress) {
+			cellClicked(elCell, i, j); // Normal tap = reveal
+		}
+	});
 }
 
 //Called when a cell (td) is clicked
@@ -223,7 +253,7 @@ function cellMarked(elCell, i, j) {
 		cell.isMarked = true;
 		gGame.markedCount++;
 	}
-	
+
 	const remainingFlags = gLevel.MINES - gGame.markedCount;
 	document.getElementById('flag-counter').textContent =
 		remainingFlags.toString().padStart(3, '0');
