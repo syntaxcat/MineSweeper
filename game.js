@@ -129,22 +129,25 @@ function renderBoard() {
 }
 
 
-let pressTimer;
-let isLongPress = false;
-
 function addTouchEvents(elCell, i, j) {
+	let pressTimer;
+	let isLongPress = false;
+
 	elCell.addEventListener('touchstart', (e) => {
+		e.preventDefault(); // ✨ Stops selection popup
 		isLongPress = false;
+
 		pressTimer = setTimeout(() => {
 			isLongPress = true;
-			cellMarked(elCell, i, j); // Place flag
-		}, 500); // time to register long press
+			cellMarked(elCell, i, j);
+		}, 500);
 	});
 
 	elCell.addEventListener('touchend', (e) => {
+		e.preventDefault(); // ✨ Stops selection popup
 		clearTimeout(pressTimer);
 		if (!isLongPress) {
-			cellClicked(elCell, i, j); // Normal tap = reveal
+			cellClicked(elCell, i, j);
 		}
 	});
 }
