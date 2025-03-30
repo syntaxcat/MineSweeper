@@ -21,11 +21,10 @@ h1 {
 .container {
 	width: 100%;
 	background-color: #c0c0c0;
+	border: 8px inset #a7a6a6;
 	/* border: 3px outset #fff; */
 	/* border: 8px inset #808080; */
-	border: 8px inset #a7a6a6;
 	/* border: 8px inset #c0c0c0; */
-
 }
 
 .flex-container {
@@ -34,6 +33,21 @@ h1 {
 	flex-direction: row;
 	gap: 70px;
 	align-items: center;
+}
+
+.panel {
+	display: flex;
+	flex-direction: row-reverse;
+	align-items: stretch;
+	justify-content: space-between;
+	gap: 2rem;
+	padding: 4px;
+	margin: 5px;
+	/* border: 4px inset #808080; */
+}
+
+.upgrade-options {
+	margin: 10px;
 }
 
 .game-container {
@@ -56,22 +70,38 @@ h1 {
 
 /* Unrevealed cells */
 .board td {
-	width: 35px;
-	height: 35px;
 	border: 3px solid;
 	border-color: #fff #808080 #808080 #fff;
-	/* border-color: #fff #a7a6a6 #a7a6a6 #fff; */
+	/* border-color: #fff #a7a6a6 #a7a6a6 #fff;  */
 	background-color: #c0c0c0;
 	text-align: center;
 	vertical-align: middle;
 	font-weight: bold;
-	font-size: 18px;
 	cursor: pointer;
 	transition: all 0.1s ease;
 	-webkit-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
 	touch-action: manipulation;
+	font-feature-settings: "kern";
+	/* display: flex; */
+	align-items: center;
+	justify-content: center;
+	line-height: 1;
+	overflow: hidden;
+}
+
+
+/* Revealed cell */
+.board td.cell {
+	border: 1px solid #808080 !important;
+	background-color: #c0c0c0 !important;
+	pointer-events: none;
+}
+
+/* Mine cell */
+.board td.mine {
+	background-color: #ff0000;
 }
 
 .board td:focus {
@@ -118,18 +148,6 @@ h1 {
 
 .board td[data-value="8"] {
 	color: #808080;
-}
-
-/* Revealed cell */
-.board td.cell {
-	border: 1px solid #808080 !important;
-	background-color: #c0c0c0 !important;
-	pointer-events: none;
-}
-
-/* Mine cell */
-.board td.mine {
-	background-color: #ff0000;
 }
 
 #btn {
@@ -188,6 +206,10 @@ h1 {
 	font-size: 24px;
 }
 
+.won {
+	animation: winFlash 1s ease 3;
+}
+
 /* Responsive cell sizes */
 .cells-4-4 td {
 	width: 80px;
@@ -207,9 +229,7 @@ h1 {
 	font-size: 16px;
 }
 
-.won {
-	animation: winFlash 1s ease 3;
-}
+
 
 @keyframes winFlash {
 	0% {
@@ -223,19 +243,4 @@ h1 {
 	100% {
 		background-color: normal;
 	}
-}
-
-.panel {
-	display: flex;
-	flex-direction: row-reverse;
-	align-items: stretch;
-	justify-content: space-between;
-	gap: 2rem;
-	padding: 4px;
-	margin: 5px;
-	/* border: 4px inset #808080; */
-}
-
-.upgrade-options {
-	margin: 10px;
 }

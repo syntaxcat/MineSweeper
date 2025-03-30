@@ -181,6 +181,28 @@ function cellClicked(elCell, i, j) {
 	checkGameOver(i, j);
 }
 
+// function revealCell(i, j) {
+// 	const cell = gBoard[i][j];
+// 	const elCell = document.getElementById(`cell-${i}-${j}`);
+
+// 	if (cell.isShown || cell.isMine) return;
+
+// 	cell.isShown = true;
+// 	gGame.shownCount++;
+// 	elCell.classList.add('cell');
+
+// 	if (cell.minesAroundCount === 0) {
+// 		// elCell.innerHTML = '&nbsp;'; // keeps height consistent
+// 		elCell.innerHTML = '';
+// 	elCell.removeAttribute('data-value');
+// 		// elCell.removeAttribute('data-value'); // ✅ remove it
+// 		expandShown(gBoard, i, j);
+// 	} else {
+// 		elCell.innerHTML = cell.minesAroundCount;
+// 		elCell.setAttribute('data-value', cell.minesAroundCount);
+// 	}
+// }
+
 function revealCell(i, j) {
 	const cell = gBoard[i][j];
 	const elCell = document.getElementById(`cell-${i}-${j}`);
@@ -192,8 +214,8 @@ function revealCell(i, j) {
 	elCell.classList.add('cell');
 
 	if (cell.minesAroundCount === 0) {
-		elCell.innerHTML = '';
-		elCell.removeAttribute('data-value'); // ✅ remove it
+		elCell.innerHTML = '&nbsp;';
+		elCell.removeAttribute('data-value');
 		expandShown(gBoard, i, j);
 	} else {
 		elCell.innerHTML = cell.minesAroundCount;
