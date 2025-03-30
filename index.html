@@ -1,39 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="app.css">
-    <title>Sprint 1 Challenge - Mine Sweeper</title>
+    <title>Mine Sweeper</title>
 </head>
 
-<body onload ="initGame()">
+<body onload="initGame()">
     <h1>Mine Sweeper</h1>
-    <div class="container">
-        <div class="stopwatch">
-            <div id="display"> Timer :
-                <span id="seconds">000</span> 
-            </div>
-          </div>
-          <div class="flex-container">
-            <h2> Mines - <span>2</span> </h2>
-              <button id="btn" onclick="initGame(this)">🙂</button>
-              <div class="lives"></div>
-          </div>
-        Choose your level:
+    <div class="upgrade-options">
         <div class="buttons">
-            <button onclick="boardSize(4,2,1)">Beginner(4*4)</button>
-            <button onclick="boardSize(8,12,2)">Medium(8*8)</button>
-            <button onclick="boardSize(12,30,3)">Expert(12*12)</button>
+            <button onclick="boardSize(4,2,1)">(4*4)</button>
+            <button onclick="boardSize(8,12,2)">(8*8)</button>
+            <button onclick="boardSize(12,30,3)">(12*12)</button>
+        </div>
+        <div class="flex-container">
+            <h2>💣 <span id="bomb-counter">2</span></h2>
+            <div class="lives"></div>
         </div>
     </div>
-    <table cellpadding="0" class="board">
-        <tbody class="cells"></tbody>
-    </table>
+    
+    <div class="game-container">
+        <div class="container" id="panel">
+            <div class="panel">
+                <div class="stopwatch">
+                    <div id="display">
+                        <span id="seconds">000</span>
+                    </div>
+                </div>
+                <button id="btn" onclick="initGame()">🙂</button>
+                <div class="stopwatch flagesCount">
+                    <div id="display">
+                        <span id="flag-counter">000</span> <!-- 💥 unique ID -->
+                    </div>
+                </div>
+            </div>
 
+        </div>
+        <table cellpadding="0" class="board">
+            <tbody class="cells"></tbody>
+        </table>
+    </div>
 
     <script src="util.js"></script>
     <script src="game.js"></script>
 </body>
+
 </html>

@@ -3,7 +3,7 @@
 var gSeconds = 0;
 
 function startStopWatch() {
-	console.log('start');
+	// console.log('start');
 	gTimer = setInterval(() => {
 		gSeconds += 1;
 		document.getElementById('seconds').innerHTML = gSeconds.toString().padStart(3, 0);
