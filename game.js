@@ -268,7 +268,7 @@ function checkGameOver(i, j) {
 		gLifeCount--;
 		document.querySelector('.lives').innerText = LIFE.repeat(gLifeCount);
 
-		// 💥 Decrease the visible bomb count
+		// Decrease the visible bomb count
 		const elBombCounter = document.getElementById('bomb-counter');
 		let bombCount = parseInt(elBombCounter.textContent);
 		elBombCounter.textContent = Math.max(0, bombCount - 1); // prevent negative numbers
