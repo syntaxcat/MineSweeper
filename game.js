@@ -255,21 +255,16 @@ function cellMarked(elCell, i, j) {
 		elCell.innerHTML = FLAG;
 		cell.isMarked = true;
 		gGame.markedCount++;
+		elCell.blur(); // remove focus only when placing flag
 	}
 
 	const remainingFlags = gLevel.MINES - gGame.markedCount;
 	document.getElementById('flag-counter').textContent =
 		remainingFlags.toString().padStart(3, '0');
 
-
-	if (remainingFlags === 0) {
-		document.getElementById('flag-counter').style.color = 'limegreen';
-	} else {
-		document.getElementById('flag-counter').style.color = 'red';
-	}
-
+	document.getElementById('flag-counter').style.color =
+		remainingFlags === 0 ? 'limegreen' : 'red';
 }
-
 
 function checkGameOver(i, j) {
 	const cell = gBoard[i][j];
