@@ -263,7 +263,8 @@ function cellMarked(elCell, i, j) {
 
 	// Enforce flag limit = mine count
 	if (!cell.isMarked && gGame.markedCount >= gLevel.MINES) {
-		alert('No more flags available!');
+		// alert('No more flags available!');
+		showToast('🚫 No more flags available!');
 		return;
 	}
 
@@ -299,7 +300,7 @@ function checkGameOver(i, j) {
 		(cell.isMine && cell.isMarked) || (!cell.isMine && !cell.isMarked)
 	);
 
-	if (isAllNonMinesRevealed || areAllMinesFlagged) {
+	if (isAllNonMinesRevealed) {
 		// Win handling
 		gGame.isOn = false;
 		document.querySelector('#btn').innerText = WIN;
@@ -308,7 +309,8 @@ function checkGameOver(i, j) {
 		// Visual feedback
 		document.body.classList.add('game-won');
 		setTimeout(() => {
-			alert('🎉 Congratulations! You won! 🎉');
+			// alert('🎉 Congratulations! You won! 🎉');
+			showToast('🎉 Congratulations!\nYou won!', 4000);
 		}, 100);
 		return;
 	}
@@ -334,7 +336,8 @@ function checkGameOver(i, j) {
 			// Visual feedback
 			document.body.classList.add('game-lost');
 			setTimeout(() => {
-				alert('💥 Game Over! Try again! 💥');
+				// alert('💥 Game Over! Try again! 💥');
+				showToast('💥 Game Over!\nTry again! 💥', 4000);
 			}, 100);
 		}
 	}
@@ -372,4 +375,22 @@ function expandShown(board, rowIdx, colIdx) {
 			}
 		}
 	}
+}
+
+function showToast(message, duration = 2500) {
+	const toast = document.getElementById('toast');
+	toast.textContent = message;
+	toast.classList.remove('hidden');
+
+	// Force reflow to trigger transition
+	void toast.offsetWidth;
+
+	toast.classList.add('show');
+
+	setTimeout(() => {
+		toast.classList.remove('show');
+		setTimeout(() => {
+			toast.classList.add('hidden');
+		}, 300);
+	}, duration);
 }
